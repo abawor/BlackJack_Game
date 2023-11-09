@@ -1,0 +1,17 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="index.css">
+    </head>
+    <body>
+        <h1>Blackjack</h1>
+        <p id="message-el">Want to play a round?</p>
+        <p id="current-cards-el"></p>
+        <p id="current-state-el"></p>
+        <button onclick="startGame()" id="start-game-btn">START GAME</button>
+        <div id="draw-more">
+            <button onclick="newCard()" id="draw-btn" hidden>DRAW</button>
+            <button onclick="pass()" id="pass-btn" hidden>PASS</button>
+        </div>
+        <script src="index.js"></script>
+    </body>
+</html>
