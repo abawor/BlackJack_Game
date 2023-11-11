@@ -1,49 +1,88 @@
-let firstCard = Math.floor(Math.random() * 10) + 2;
-let secondCard = Math.floor(Math.random() * 10) + 2;
-let cards = [firstCard, secondCard]
-let sum = firstCard + secondCard;
-let hasBlackJack = false;
-let isAlive = true;
-let message = document.getElementById("message-el");
+let player = {
+    name: "Your Name",
+    chips: 10
+};
+let cards = [];
+let sum = 0;
+let initialStart = 0;
+let messageEl = document.getElementById("message-el");
 let startGameBtn = document.getElementById("start-game-btn");
-let currentCards = document.getElementById("current-cards-el");
-let currentState = document.getElementById("current-state-el");
-let draw = document.getElementById("draw-btn");
-let pass = document.getElementById("pass-btn");
+let currentCardsEl = document.getElementById("current-cards-el");
+let currentStateEl = document.getElementById("current-state-el");
+let drawBtn = document.getElementById("draw-btn");
+let passBtn = document.getElementById("pass-btn");
+let playerEl = document.getElementById("player-el");
 
+function getRandomCard() {
+    let randomNumber = Math.floor(Math.random() * 13) + 1
+    if (randomNumber === 1) {
+        return 11
+    } else if (randomNumber > 10) {
+        return 10
+    } else {
+        return randomNumber
+    }
+};
 
 function startGame() {
-    message.textContent = ""
+    let firstCard = getRandomCard()
+    let secondCard = getRandomCard()
+    cards = [firstCard, secondCard]
+    sum = cards[0] + cards[1]
+    messageEl.textContent = ""
     startGameBtn.style.display = "none"
+    playerEl.style.display = "inline"
+    if (initialStart === 0) {
+        player.name = prompt("Your name: ")
+        initialStart++
+    }
+    updatePlayerEl()
     renderGame()
 };
 
+
+function updatePlayerEl () {
+    playerEl.textContent = player.name + ": $" + player.chips;
+};
+
 function renderGame() {
-    currentCards.textContent = "Current Cards: " + cards[0] + ", " + cards[1]
+    currentCardsEl.textContent = "Current Cards: " + cards[0] + ", " + cards[1]
+    for (let i = 2; i < cards.length; i++) {
+        currentCardsEl.textContent += ", " + cards[i] 
+    }
     if (sum < 21) {
-        currentState.textContent = (`Your current score is ${sum}. Would you like to draw another card?`)
-        draw.style.display = "inline"
-        pass.style.display = "inline"
+        currentStateEl.textContent = (`Your current score is ${sum}. Would you like to draw another card?`)
+        drawBtn.style.display = "inline"
+        passBtn.style.display = "inline"
     } else if (sum === 21) {
-        currentState.textContent = (`${sum}! You got Blackjack!`)
-        hasBlackJack = true
+        player.chips++
+        updatePlayerEl()
+        currentStateEl.textContent = (`${sum}! You got Blackjack!`)
+        gameFinished()
     } else {
-        currentState.textContent = (`${sum}! You are out of the game!`)
-        isAlive = false
+        player.chips--
+        updatePlayerEl()
+        currentStateEl.textContent = (`${sum}! You are out of the game!`)
+        gameFinished()
     }
 };
 
 function newCard() {
-    let newCard = Math.floor(Math.random() * 10) + 2
+    let newCard = getRandomCard()
+    cards.push(newCard)
     sum += newCard
-    currentCards.textContent += ", " + newCard
     renderGame()
 };
 
+function gameFinished() {
+    drawBtn.style.display = "none"
+    passBtn.style.display = "none"
+    startGameBtn.style.display = "inline"
+    startGameBtn.textContent = "PLAY AGAIN"
+};
 
-
-
-//function pass() {
-
-//};
+function passTurn() {
+    currentStateEl.textContent = (`Your final score is ${sum}.`)
+    gameFinished()
+};
 
